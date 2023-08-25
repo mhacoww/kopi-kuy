@@ -445,6 +445,7 @@ section.review {
    justify-content: space-around;
    /* align-items: stretch; membuat tinggi elemen di dalam .review .baris seragam */
    text-align: center;
+   align-items: stretch;
 }
 
 section.review h2 {
