@@ -49,8 +49,13 @@
                     messageBox.style.color = "green";
                     messageBox.innerText = `Welcome, ${foundUser.username}! Role: ${foundUser.user_level}`;
                     
-                    // Optional: Save user role to session storage so other pages know who is logged in
+                    // Save user role to session storage
                     sessionStorage.setItem('loggedInUser', JSON.stringify(foundUser));
+                    
+                    // NEW: Redirect to index.html after 1.5 seconds
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 1500);
                     
                 } else {
                     messageBox.style.color = "red";
