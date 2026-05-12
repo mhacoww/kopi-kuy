@@ -25,48 +25,54 @@
 
     <script>
         // REPLACE THIS with your actual SheetDB API URL
-        const API_URL = 'https://sheetdb.io/api/v1/8bar2xccghxrf';
+    const API_URL = 'https://sheetdb.io/api/v1/8bar2xccghxrf';
 
-        async function attemptLogin() {
-            const enteredUsername = document.getElementById('usernameInput').value;
-            const enteredPassword = document.getElementById('passwordInput').value;
-            const messageBox = document.getElementById('loginMessage');
+    async function attemptLogin() {
+        const enteredUsername = document.getElementById('usernameInput').value;
+        const enteredPassword = document.getElementById('passwordInput').value;
+        const messageBox = document.getElementById('loginMessage');
 
-            messageBox.innerText = "Checking credentials...";
-            messageBox.style.color = "black";
+        messageBox.innerText = "Checking credentials...";
+        messageBox.style.color = "black";
 
-            try {
-                // Fetch the data from your Google Sheet
-                const response = await fetch(API_URL);
-                const users = await response.json();
+        console.log("1. Login button clicked!");
+        console.log("Username entered:", enteredUsername);
 
-                // Search the array for a matching username and password
-                const foundUser = users.find(user => 
-                    user.username === enteredUsername && user.password === enteredPassword
-                );
+        try {
+            console.log("2. Attempting to fetch from:", API_URL);
+            const response = await fetch(API_URL);
+            const users = await response.json();
+            
+            console.log("3. Data received from SheetDB:", users);
 
-                if (foundUser) {
-                    messageBox.style.color = "green";
-                    messageBox.innerText = `Welcome, ${foundUser.username}! Role: ${foundUser.user_level}`;
-                    
-                    // Save user role to session storage
-                    sessionStorage.setItem('loggedInUser', JSON.stringify(foundUser));
-                    
-                    // NEW: Redirect to index.html after 1.5 seconds
-                    setTimeout(() => {
-                        window.location.href = "index.html";
-                    }, 1500);
-                    
-                } else {
-                    messageBox.style.color = "red";
-                    messageBox.innerText = "Invalid username or password.";
-                }
-            } catch (error) {
-                console.error("Error fetching data:", error);
+            const foundUser = users.find(user => 
+                user.username === enteredUsername && user.password === enteredPassword
+            );
+
+            console.log("4. Did we find a matching user?", foundUser);
+
+            if (foundUser) {
+                messageBox.style.color = "green";
+                messageBox.innerText = `Welcome, ${foundUser.username}! Role: ${foundUser.user_level}`;
+                
+                sessionStorage.setItem('loggedInUser', JSON.stringify(foundUser));
+                console.log("5. Session saved. Starting 1.5s countdown for redirect...");
+                
+                setTimeout(() => {
+                    console.log("6. Executing redirect to index.html now!");
+                    window.location.href = "index.html";
+                }, 1500);
+                
+            } else {
                 messageBox.style.color = "red";
-                messageBox.innerText = "System error. Please try again.";
+                messageBox.innerText = "Invalid username or password.";
             }
+        } catch (error) {
+            console.error("CRITICAL ERROR ENCOUNTERED:", error);
+            messageBox.style.color = "red";
+            messageBox.innerText = "System error. Please try again.";
         }
+    }
     </script>
 </body>
 </html>
