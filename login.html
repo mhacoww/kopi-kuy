@@ -1,0 +1,46 @@
+<!-- Basic Login Form -->
+<input type="text" id="usernameInput" placeholder="Username">
+<input type="password" id="passwordInput" placeholder="Password">
+<button onclick="attemptLogin()">Login</button>
+<p id="loginMessage"></p>
+
+<script>
+// Replace this with your actual SheetDB API URL
+const API_URL = 'https://sheetdb.io/api/v1/YOUR_UNIQUE_ID';
+
+async function attemptLogin() {
+    const enteredUsername = document.getElementById('usernameInput').value;
+    const enteredPassword = document.getElementById('passwordInput').value;
+    const messageBox = document.getElementById('loginMessage');
+
+    messageBox.innerText = "Checking credentials...";
+
+    try {
+        // Fetch the data from your Google Sheet
+        const response = await fetch(API_URL);
+        const users = await response.json();
+
+        // Search the array for a matching username and password
+        const foundUser = users.find(user => 
+            user.username === enteredUsername && user.password === enteredPassword
+        );
+
+        if (foundUser) {
+            // Login Success
+            messageBox.style.color = "green";
+            messageBox.innerText = `Welcome, ${foundUser.username}! Your role is: ${foundUser.user_level}`;
+            
+            // Here you could save the user's session to localStorage and redirect them
+            // localStorage.setItem('currentUser', JSON.stringify(foundUser));
+            // window.location.href = "dashboard.html";
+        } else {
+            // Login Failed
+            messageBox.style.color = "red";
+            messageBox.innerText = "Invalid username or password.";
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        messageBox.innerText = "System error. Please try again later.";
+    }
+}
+</script>
