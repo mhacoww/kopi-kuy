@@ -160,7 +160,29 @@
         </div>
     </footer>
 
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Check if someone is logged in
+        const loggedInUser = sessionStorage.getItem('loggedInUser');
+        const authButton = document.getElementById('authButton');
 
+        if (loggedInUser && authButton) {
+            // Convert the stored string back into an object
+            const user = JSON.parse(loggedInUser);
+            
+            // Change the button text
+            authButton.innerText = `Hi, ${user.username} (Logout)`;
+            
+            // Change the link behavior to log them out instead of going to the login page
+            authButton.href = "#"; 
+            authButton.onclick = (e) => {
+                e.preventDefault(); // Stop the page from jumping to the top
+                sessionStorage.removeItem('loggedInUser'); // Clear the session
+                window.location.reload(); // Refresh the page to show "Login" again
+            };
+        }
+    });
+</script>
 
     <!--
         Kode HTML tidak boleh lewat dari batas ini
