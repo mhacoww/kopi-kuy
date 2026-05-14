@@ -28,8 +28,16 @@
         // PASTE YOUR SUPABASE URL AND ANON KEY HERE
         const SUPABASE_URL = 'https://vukiwkaowsvlxsbmisjr.supabase.co/rest/v1/';
         const SUPABASE_ANON_KEY = 'sb_publishable_M0_lWHOn7NytFPK39sEgUQ_M1P0JnCL';
-
+        // 1. Your Credentials (Make sure these are inside the quotes!)
+        
+        // 2. Initialize the client with a unique name
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // 3. Debug check: Let's see if the client actually loaded the auth part
+        console.log("Supabase Client check:", _supabase);
+        if (!_supabase.auth) {
+            console.error("Auth module failed to load. Check your URL and Key!");
+        }
 
         async function login() {
             const email = document.getElementById('emailInput').value;
@@ -39,23 +47,27 @@
             messageBox.innerText = "Authenticating...";
             messageBox.style.color = "black";
 
-            // Supabase handles the secure login check
-            const { data, error } = await _supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
+            try {
+                // USE _supabase HERE (the variable we created above)
+                const { data, error } = await _supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
 
-            if (error) {
-                messageBox.style.color = "red";
-                messageBox.innerText = error.message;
-            } else {
-                messageBox.style.color = "green";
-                messageBox.innerText = "Login successful! Redirecting...";
-                
-                // Redirect to the secure dashboard
-                setTimeout(() => {
-                    window.location.href = "index.html";
-                }, 1000);
+                if (error) {
+                    messageBox.style.color = "red";
+                    messageBox.innerText = error.message;
+                } else {
+                    messageBox.style.color = "green";
+                    messageBox.innerText = "Login successful! Redirecting...";
+                    
+                    setTimeout(() => {
+                        window.location.href = "admin-dashboard.html";
+                    }, 1000);
+                }
+            } catch (err) {
+                console.error("Unexpected error:", err);
+                messageBox.innerText = "A system error occurred. Check the console.";
             }
         }
     </script>
